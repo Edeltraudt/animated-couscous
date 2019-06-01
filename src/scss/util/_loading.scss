@@ -1,0 +1,25 @@
+@mixin loading-gradient($deg: 100deg) {
+  animation: loading-background 1s infinite;
+  background: $color-loading;
+
+  @keyframes loading-background {
+    0% {
+      background-color: $color-loading;
+    }
+    50% {
+      background-color: $color-loading-l;
+    }
+    100% {
+      background-color: $color-loading;
+    }
+  }
+}
+
+@mixin loading-text($font-size: 1rem) {
+  @include loading-gradient;
+  content: '';
+  display: block;
+  height: $font-size;
+  margin: $font-size * 0.25 0;
+  width: 100%;
+}

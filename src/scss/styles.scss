@@ -1,0 +1,26 @@
+///
+///
+/// PUPUCK SCSS Boilerplate
+///
+///
+
+// Reset browser-specific styles
+@import "_reset";
+
+// Constants
+@import "base/_base";
+
+// Functions, mixins and placeholders
+@import "util/_util";
+
+// Fonts imports
+@import "_fonts";
+
+// Structural layout elements
+@import "layout/_layout";
+
+// Reusable UI components
+@import "ui/_ui";
+
+// View-specific styles
+@import "views/_views";

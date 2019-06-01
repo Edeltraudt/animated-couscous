@@ -1,0 +1,14 @@
+//
+// SASS-BASE - a starter kit for any SASS project
+//
+// Author: Dmitry Monin
+
+@mixin font-size($size) {
+  font-size: 0px + $size;
+  font-size: 0rem + $size / $fs-document;
+}
+
+@function rem($size) {
+  $remSize: $size / $fs-document;
+  @return #{$remSize}rem;
+}

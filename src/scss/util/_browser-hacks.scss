@@ -1,0 +1,34 @@
+// _browserhacks.scss
+//
+// Mixins to correct browser quirks
+// Usage: browser(&) inside the selector, or enter selector by hand
+
+@mixin only-ie($selector: false) { // IE10+
+  @if $selector == false {
+    @warn 'No selector given for mixin `ie($selector)`.';
+  } @else {
+    @at-root _:-ms-input-placeholder, :root #{$selector} {
+      @content;
+    }
+  }
+}
+
+@mixin only-edge($selector: false) { // Microsoft Edge
+  @if $selector == false {
+    @warn 'No selector given for mixin `edge($selector)`.';
+  } @else {
+    @at-root _:-ms-fullscreen, :root #{$selector} {
+      @content;
+    }
+  }
+}
+
+@mixin only-firefox($selector: false) { // FF6+
+  @if $selector == false {
+    @warn 'No selector given for mixin `firefox($selector)`.'
+  } @else {
+    @at-root _::-moz-progress-bar, body:last-child #{$selector} {
+      @content;
+    }
+  }
+}

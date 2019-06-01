@@ -1,0 +1,11 @@
+.container {
+  @include container;
+
+  &.-narrow {
+    max-width: $container-narrow-width;
+  }
+}
+
+.section {
+  @include section;
+}

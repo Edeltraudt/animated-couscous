@@ -1,0 +1,15 @@
+a {
+  // Open link in new tab
+  &[target="_blank"] {
+
+  }
+
+  // External links
+  &[href*="www."],
+  &[href$="http://"],
+  &[href$="https://"] {
+    &:not([href="#{$domain}"]) {
+
+    }
+  }
+}

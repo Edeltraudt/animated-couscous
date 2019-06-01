@@ -1,0 +1,31 @@
+// __defs.scss
+// Definition file
+//
+// ==================================================================
+//
+// Contains SCSS variables and helpers that would never change
+// throughout projects and which serve mainly for loops and checks.
+//
+
+$sides-x: (
+  'right':  'left',
+  'left':   'right',
+  'ltr':    'rtl',
+  'rtl':    'ltr'
+);
+
+$sides-y: (
+  'top':    'bottom',
+  'bottom': 'top'
+);
+
+$sides: map-merge($sides-x, $sides-y);
+
+
+@function opposite($of) {
+  @if map-has-key($sides, $of) {
+    @return map-get($sides, $of);
+  }
+
+  @warn 'Invalid side `#{$of}`.'
+}

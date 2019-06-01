@@ -1,0 +1,33 @@
+@mixin button-colors($bg) {
+  $border: adjust-hue(saturate(darken($bg, 5%), 20%), -10%);
+  background: $bg;
+  border-color: $border;
+  color: adjust-hue(darken($bg, 37%), -10%);
+
+  &:hover, &:focus {
+    background: lighten($bg, 10%);
+    border-color: lighten($border, 20%);
+  }
+
+  &:active {
+    background: lighten($bg, 10%);
+    border-color: $border;
+  }
+}
+
+.button {
+  border: 3px solid;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  line-height: 1;
+  padding: $spacing-small;
+  width: 100%;
+
+  @include button-colors($color-primary);
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

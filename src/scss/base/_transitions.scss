@@ -1,0 +1,16 @@
+// transition variables
+// usage: `transition: all transition(name)`
+
+$transition-duration-default: 0.2s;
+
+$transitions: (
+  'ease':           $transition-duration-default cubic-bezier(0.4, 0.0, 0.2, 1),
+  'ease-out':       $transition-duration-default cubic-bezier(0.0, 0.0, 0.2, 1),
+  'ease-in':        $transition-duration-default cubic-bezier(0.4, 0.0, 1, 1),
+  'ease-out-back':  0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+  'ease-in-out':    0.6s cubic-bezier(1, 0, 0, 1)
+);
+
+@function transition($transition) {
+  @return map-get($transitions, $transition);
+}

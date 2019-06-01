@@ -1,0 +1,21 @@
+%icon-button {
+  align-items: center;
+  display: inline-flex;
+  line-height: 1;
+
+  svg {
+    height: $spacing-base;
+    margin-right: 0.5em;
+    width: $spacing-base;
+
+
+    * {
+      fill: currentColor;
+
+      &[stroke] {
+        fill: none;
+        stroke: currentColor;
+      }
+    }
+  }
+}

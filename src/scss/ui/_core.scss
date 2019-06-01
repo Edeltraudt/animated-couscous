@@ -1,0 +1,14 @@
+html, body {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+html {
+  background: $color-bg;
+  font-size: $fs-document;
+}
+
+body {
+  font: 300 1em/1.5 $ff-default;
+}

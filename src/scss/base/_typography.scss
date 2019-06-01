@@ -1,0 +1,31 @@
+// typography variables
+
+// Document font sizes used for root element, basis for rem
+$fs-document-s: 15px !default;
+$fs-document:   16px !default;
+
+// Font sizes relative to root
+$fs-x-small:    0.875rem !default;
+$fs-small:      1rem !default;
+$fs-base:       1.175rem !default;
+$fs-medium:     1.375rem !default;
+$fs-large:      1.75rem !default;
+$fs-x-large:    2.5rem !default;
+
+// System fonts used for fallbacks
+$ff-system:     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !default;
+
+// Relative fonts
+$ff-default:    'Radnika Next', $ff-system;
+$ff-text:       $ff-default;
+$ff-display:    $ff-default !default;
+
+// Font weights
+$fw-normal:     400;
+$fw-medium:     500;
+$fw-bold:       800;
+
+// Line heights
+$lh-small:      1.125 !default;
+$lh-base-s:     1.3 !default;
+$lh-base:       1.5 !default;

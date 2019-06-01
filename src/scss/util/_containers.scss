@@ -1,0 +1,41 @@
+// Container placeholders and mixins for generating
+
+@mixin container($max-width: $container-width, $padding-x: $padding-x, $padding-y: 0) {
+  margin: 0 auto;
+  max-width: $max-width;
+  overflow: auto;
+  padding: $padding-y $padding-x;
+  position: relative;
+  width: 100%;
+}
+
+@mixin fullscreen {
+  height: 100%;
+  width: 100%;
+}
+
+@mixin pos-a($t: auto, $l: auto, $r: auto, $b: auto) {
+  bottom: $b;
+  left: $l;
+  position: absolute;
+  right: $r;
+  top: $t;
+}
+
+@mixin absolute {
+  @include pos-a(0,0,0,0);
+}
+
+@mixin section {
+  padding-bottom: $padding-section;
+  padding-top: $padding-section;
+}
+
+%container {
+  @include container;
+}
+
+%container-narrow,
+%narrow-container {
+  @include container($container-narrow-width);
+}

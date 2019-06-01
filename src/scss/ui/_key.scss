@@ -1,0 +1,59 @@
+.key {
+  $fz: 13px;
+
+  align-items: center;
+  background: $color-bg;
+  border-radius: 3px;
+  box-sizing: content-box;
+  color: colorInvert($color-bg);
+  cursor: default;
+  display: inline-flex;
+  font-weight: 500;
+  font-size: $fz;
+  height: $fz;
+  justify-content: center;
+  line-height: 1;
+  min-width: 1.5ch;
+  text-align: center;
+  padding: 8px;
+  vertical-align: middle;
+
+  & + & {
+    margin-left: 5px;
+  }
+
+  &:last-of-type {
+    margin-right: $spacing-base;
+  }
+
+  &.-arrow {
+    &::before {
+      border: 5px solid transparent;
+      content: '';
+    }
+
+    &.-down::before {
+      border-bottom: 0;
+      border-top-color: currentColor;
+    }
+
+    &.-up::before {
+      border-top: 0;
+      border-bottom-color: currentColor;
+    }
+
+    &.-left::before {
+      border-left: 0;
+      border-right-color: currentColor;
+    }
+
+    &.-right::before {
+      border-right: 0;
+      border-left-color: currentColor;
+    }
+  }
+
+  &.-space {
+    width: 6ch;
+  }
+}

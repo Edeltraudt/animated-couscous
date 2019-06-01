@@ -1,0 +1,46 @@
+//
+// Basic reset styles for HTML elements.
+//
+
+input,
+button {
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  padding: 0;
+  font: inherit;
+}
+
+input {
+  &::placeolder {
+    color: $color-soft;
+  }
+}
+
+p {
+  margin: 0 0 0.5em;
+}
+
+svg {
+  color: currentColor;
+  max-height: 100%;
+  max-width: 100%;
+
+  * {
+    fill: currentColor;
+
+    &[stroke] {
+      fill: none;
+      stroke: currentColor;
+    }
+  }
+}
+
+button {
+  svg {
+    height: $fs-x-large;
+    width: $fs-x-large;
+  }
+}

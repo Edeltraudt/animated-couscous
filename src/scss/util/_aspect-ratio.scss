@@ -1,0 +1,9 @@
+@mixin aspect-ratio($ratio: 1) {
+  &::after {
+    content: '';
+    display: table; // Firefox
+    height: 0;
+    padding-bottom: 100% * $ratio;
+    width: 100%;
+  }
+}

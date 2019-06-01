@@ -1,0 +1,92 @@
+.controls {
+  background: adjust-hue(desaturate(lighten($color-bg, 5%), 12%), -10%);
+  color: adjust-hue(desaturate(lighten($color-bg, 45), 15%), -10%);
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 300px;
+  padding: $spacing-large;
+  text-align: center;
+
+  &__game {
+    margin-bottom: $spacing-large;
+    margin-top: auto;
+  }
+
+  &__info {
+    padding-top: $spacing-large;
+
+    h1 {
+      color: colorInvert($color-bg);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      margin: 0 0 0.25em;
+      text-transform: uppercase;
+    }
+  }
+
+  &__version {
+  }
+
+  &__toggle {
+    display: flex;
+    margin-bottom: $spacing-large;
+
+    input {
+      height: 0;
+      left: -9999px;
+      overflow: hidden;
+      position: absolute;
+      width: 0;
+    }
+
+    label {
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 300;
+      padding: $spacing-small;
+      text-align: center;
+      user-select: none;
+      width: 100%;
+
+      &:hover, &:focus {
+        background: rgba(#000, 0.2);
+      }
+
+      &:active {
+        background: $color-bg;
+      }
+    }
+
+    input:checked ~ label {
+      color: colorInvert($color-bg);
+      font-weight: 500;
+    }
+
+    input:disabled ~ label {
+      opacity: 0.75;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+  }
+
+  &__toggle & {
+    &__item {
+      flex: 1;
+      padding: 0;
+    }
+  }
+
+  &__item {
+    display: flex;
+    padding: $spacing-small;
+  }
+
+  &__keys {
+    margin: auto 0;
+    text-align: left;
+  }
+
+  &__key {
+    margin: 0 0 0.5em;
+  }
+}

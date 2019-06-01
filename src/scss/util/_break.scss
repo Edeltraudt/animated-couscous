@@ -1,0 +1,51 @@
+///
+///
+///
+/// Mobile-first breakpoint mixin
+///
+/// ==================================================================
+///
+/// Displays come in many shapes and sizes, so the predefined map
+/// contains purposefully offset pixel values for hd and 4k to ensure
+/// the styles will be applied correctly.
+///
+/// Override any time.
+///
+///
+///
+
+$breakpoints: (
+  'mobile':             500px,
+  'tablet':             768px,
+  'tablet-l':           1024px,
+  'desktop':            1336px,
+  'hd':                 1600px,
+  '4k':                 2400px
+) !default;
+
+@mixin break($breakpoint, $modifier: 'min') {
+
+  @if map-has-key($breakpoints, $breakpoint) {
+    $size: map-get($breakpoints, $breakpoint);
+
+    @if ($modifier == 'max') {
+      $size: $size - 1;
+    }
+
+    @media only screen and (#{$modifier}-width: $size) {
+      @content;
+    }
+  }
+
+  @else {
+    @if $breakpoint / $breakpoint != 1 {
+      @warn 'Invalid breakpoint `#{$breakpoint}`: Either choose an absolute value or a breakpoint from the predefined breakpoints map.';
+    }
+
+    @else {
+      @media only screen and (#{$modifier}-width: $breakpoint) {
+        @content;
+      }
+    }
+  }
+}

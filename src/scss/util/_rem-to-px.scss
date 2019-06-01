@@ -1,0 +1,3 @@
+@function rem-to-px($rem) {
+  @return $rem / 1rem * $fs-document;
+}

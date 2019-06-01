@@ -1,0 +1,20 @@
+// Box-shadow mixin inspired by material design
+// Applies multiple box-shadows.
+
+@mixin elevate($level: 1, $color: #000, $opacity: false) {
+  $offset-x-a: $level * 0;
+  $offset-x-b: $level * 0;
+  $offset-y-a: $level * 1px;
+  $offset-y-b: 2px;
+
+  $blur-a: $level * 3px;
+  $blur-b: 3px;
+
+  box-shadow: $offset-x-a $offset-y-a $blur-a rgba($color, 0.12),
+    $offset-x-b $offset-y-b $blur-b rgba($color, 0.05);
+
+
+  @if $opacity {
+    @warn 'The parameter `$opacity` is deprecated and should be removed.';
+  }
+}

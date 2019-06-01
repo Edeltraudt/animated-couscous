@@ -1,0 +1,56 @@
+// Mixin to handle margins, widths and responsive behavior of
+// grid items, designed for flex or floating items
+
+// Helper mixin that applies the styles
+@mixin calculated-width($n, $margin, $flex) {
+  $calculated-width: (100% - (($n - 1) * $margin)) / $n;
+  margin: $margin / 2;
+
+  // Use calc() to handle the different units
+  @if unit($margin) != '%' {
+    $calculated-width: calc((100% - #{($n - 1) * $margin}) / #{$n});
+  }
+
+  @if $flex {
+    flex: 0 0 $calculated-width;
+  } @else {
+    width: $calculated-width;
+  }
+
+  &:nth-child(#{$n}n + 1) { margin-left: 0; }
+  &:nth-child(#{$n}n + #{$n}) { margin-right: 0; }
+}
+
+
+//
+//  Main mixin
+//  @param  {list}    $n            List of desired items per row
+//  @param  {number}  $margin:      Margin between grid items
+//  @param  {list}    $breakpoints: Breakpoints over which $n should iterate
+//  @param  {boolean} $flex:        Apply flex
+//
+@mixin items-per-row($n, $margin: 2%, $breakpoints: 'mobile' 'tablet' 'desktop', $flex: true) {
+  @if length($n) != length($breakpoints) {
+    @warn 'Amount of breakpoints doesn\'t match the items counterparts.';
+  }
+
+  @each $breakpoint in $breakpoints {
+    $index: index($breakpoints, $breakpoint);
+
+    @if $index == 1 {
+      @include break(nth($breakpoints, $index + 1), max) {
+        @include calculated-width(nth($n, $index), $margin, $flex);
+      }
+    } @else {
+      @include break($breakpoint) {
+        @if $index < length($breakpoints) {
+          @include break(nth($breakpoints, $index + 1), max)  {
+            @include calculated-width(nth($n, $index), $margin, $flex);
+          }
+        } @else {
+          @include calculated-width(nth($n, $index), $margin, $flex);
+        }
+      }
+    }
+  }
+}
