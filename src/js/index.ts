@@ -5,7 +5,7 @@ import { rgbToColor } from './helpers';
 import '../scss/styles.scss';
 
 window.addEventListener('DOMContentLoaded', function () {
-  const canvas = document.getElementById('view');
+  const canvas = <HTMLCanvasElement> document.getElementById('view');
   const engine = new BABYLON.Engine(canvas, true);
 
   const createScene = function () {
@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', function () {
     };
 
     const scene = new BABYLON.Scene(engine);
-    const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / -3, Math.PI / -3, 10, BABYLON.Vector3.Zero(), scene);
+    const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 4, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas, false);
 
     const faceColors = [colors['red'], colors['orange'], colors['yellow'], colors['green'], colors['blue'], colors['white'] ];
@@ -33,19 +33,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
     camera.setTarget(box);
 
-    // 1-2 directional light sun from behind
-    // point light from front
-    const light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
-    // var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 100, -1), scene);
-    // light.diffuse = new BABYLON.Color3(1, 0, 0);
-    // light.specular = new BABYLON.Color3(0, 1, 0);
-    // light.groundColor = new BABYLON.Color3(0, 1, 0);
+    new BABYLON.DirectionalLight('sunLeft', new BABYLON.Vector3(-1, -1, -1), scene);
+    new BABYLON.DirectionalLight('sunRight', new BABYLON.Vector3(1, 1, 1), scene);
 
-    // light.parent = camera;
-    light.intensity = 2;
+    // point light from front
+    const light = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(1, 0, 1), scene);
+    light.parent = camera;
 
     return scene;
   }
+
 
   const scene = createScene();
 
