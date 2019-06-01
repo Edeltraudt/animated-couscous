@@ -3,21 +3,21 @@ import * as BABYLON from '@babylonjs/core/Legacy/legacy';
 import { rgbToColor } from './helpers';
 
 import '../scss/styles.scss';
+import { Cube } from './components/Cube';
 
 window.addEventListener('DOMContentLoaded', function () {
   const canvas = <HTMLCanvasElement> document.getElementById('view');
   const engine = new BABYLON.Engine(canvas, true);
 
   const createScene = function () {
-    const cubeSize = 3;
-
     const colors = {
-      red: rgbToColor(232, 65, 24),
-      orange: rgbToColor(253, 150, 68),
-      yellow: rgbToColor(251, 197, 49),
-      green: rgbToColor(76, 209, 55),
-      blue: rgbToColor(0, 168, 255),
-      white: rgbToColor(245, 246, 250)
+      default:  rgbToColor( 30,  39,  46),
+      red:      rgbToColor(232,  65,  24),
+      orange:   rgbToColor(253, 150,  68),
+      yellow:   rgbToColor(251, 197,  49),
+      green:    rgbToColor( 76, 209,  55),
+      blue:     rgbToColor(  0, 168, 255),
+      white:    rgbToColor(245, 246, 250)
     };
 
     const scene = new BABYLON.Scene(engine);
@@ -39,6 +39,8 @@ window.addEventListener('DOMContentLoaded', function () {
     // point light from front
     const light = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(1, 0, 1), scene);
     light.parent = camera;
+
+    const cube = new Cube(3, scene);
 
     return scene;
   }
