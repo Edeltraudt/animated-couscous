@@ -40,6 +40,7 @@ export class Cube {
         for (let z = 0; z < this.model[x][y].length; z++) {
           let faces = [];
           const block = this.model[x][y][z];
+          const gap = 0.05;
 
           if (x === this.size - 1) {
             faces.push({ index: 2, colorKey: 1 });
@@ -61,9 +62,9 @@ export class Cube {
 
           block.setFaceColors(faces);
           block.render(new Vector3(
-            x - this.centerOffset,
-            y - this.centerOffset,
-            z - this.centerOffset
+            x - this.centerOffset - gap + (gap * x),
+            y - this.centerOffset - gap + (gap * y),
+            z - this.centerOffset - gap + (gap * z)
           ));
 
           this.blocks.push(block.box);
@@ -96,11 +97,13 @@ export class Cube {
 
     root.rotate(rotationAxis, amount);
 
-    boxArray.forEach(box => {
-      box.parent = null;
-      box.rotationQuaternion = root.rotationQuaternion;
-    });
-    console.log(root);
+    // TODO: rotate the individual blocks because removing
+    // them from their parent results in no rotation happening
+    // boxArray.forEach(box => {
+    //   box.parent = null;
+    //   box.rotationQuaternion = root.rotationQuaternion;
+    // });
+    // console.log(root);
 
     // root.dispose();
   }

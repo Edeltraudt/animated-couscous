@@ -25,8 +25,8 @@ export class Block {
     this.material.specularColor = new Color3(0.2, 0.2, 0.2);
     this.key = key;
     this.faceColors = [
-      blockColors['default'], blockColors['default'], blockColors['default'],
-      blockColors['default'], blockColors['default'], blockColors['default']
+      blockColors[0].color, blockColors[0].color, blockColors[0].color,
+      blockColors[0].color, blockColors[0].color, blockColors[0].color
     ];
   }
 
