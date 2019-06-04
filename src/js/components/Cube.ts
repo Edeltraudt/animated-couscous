@@ -1,4 +1,4 @@
-import { StandardMaterial, Scene, Vector3, TransformNode, ModelShape, Mesh } from '@babylonjs/core';
+import { StandardMaterial, Scene, Vector3, TransformNode, ModelShape, Mesh, Animation } from '@babylonjs/core';
 import { Block } from './Block';
 
 export class Cube {
@@ -75,7 +75,8 @@ export class Cube {
 
   rotateAxis(axis: Vector3, amount: number) {
     const root = new TransformNode('rotationAxis');
-    let rotationAxis = new Vector3(0, 0, 0);
+    let animationTarget: string = '';
+    let rotation = new Vector3(0, 0, 0);
     let boxArray = [];
 
     for (let x = 0; x < this.model.length; x++) {
@@ -91,20 +92,38 @@ export class Cube {
       }
     }
 
-    if (axis.x > 0)  rotationAxis.x = 1;
-    if (axis.y > 0)  rotationAxis.y = 1;
-    if (axis.z > 0)  rotationAxis.z = 1;
+    if (axis.x > 0) {
+      rotation.x = 1;
+      animationTarget = 'rotation.x';
+    } else if (axis.y > 0) {
+      rotation.y = 1;
+      animationTarget = 'rotation.y';
+    } else if (axis.z > 0) {
+      rotation.z = 1;
+      animationTarget = 'rotation.z';
+    }
 
-    root.rotate(rotationAxis, amount);
+    const framerate: number = 20;
+    const animation = new Animation('rotationAnimation', animationTarget,
+      framerate, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CONSTANT);
 
-    // TODO: rotate the individual blocks because removing
-    // them from their parent results in no rotation happening
-    // boxArray.forEach(box => {
-    //   box.parent = null;
-    //   box.rotationQuaternion = root.rotationQuaternion;
-    // });
-    // console.log(root);
+    let keyframes = [];
+    keyframes.push({ frame: 0, value: 0 });
+    keyframes.push({ frame: framerate / 4, value: amount });
+    animation.setKeys(keyframes);
 
-    // root.dispose();
+    this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
+      boxArray.forEach(box => {
+        // remove the box from the rotation animation parent
+        // box.parent = null;
+
+        // apply rotation for each box inside the matrix
+        console.log(box.position);
+
+        // clean up
+        // root.dispose();
+      });
+    });
+
   }
 }
