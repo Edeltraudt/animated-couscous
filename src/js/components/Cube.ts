@@ -7,7 +7,6 @@ export class Cube {
   material: StandardMaterial;
   scene: Scene;
   centerOffset: number = 0;
-  blocks: Array<Mesh> = [];
 
   constructor(size: number, scene: Scene) {
     this.size = size;
@@ -38,9 +37,9 @@ export class Cube {
     for (let x = 0; x < this.model.length; x++) {
       for (let y = 0; y < this.model[x].length; y++) {
         for (let z = 0; z < this.model[x][y].length; z++) {
-          let faces = [];
           const block = this.model[x][y][z];
           const gap = 0.05;
+          let faces = [];
 
           if (x === this.size - 1) {
             faces.push({ index: 2, colorKey: 1 });
@@ -66,8 +65,6 @@ export class Cube {
             y - this.centerOffset - gap + (gap * y),
             z - this.centerOffset - gap + (gap * z)
           ));
-
-          this.blocks.push(block.box);
         }
       }
     }
@@ -75,10 +72,11 @@ export class Cube {
 
   rotateAxis(axis: Vector3, amount: number) {
     const root = new TransformNode('rotationAxis');
+    const axes = ['x', 'y', 'z'];
     let animationTarget: string = '';
-    let rotation = new Vector3(0, 0, 0);
-    let boxArray = [];
+    let boxArray: Array<Mesh> = [];
 
+    // get and group all boxes affected by the rotation
     for (let x = 0; x < this.model.length; x++) {
       for (let y = 0; y < this.model[x].length; y++) {
         for (let z = 0; z < this.model[x][y].length; z++) {
@@ -92,38 +90,50 @@ export class Cube {
       }
     }
 
-    if (axis.x > 0) {
-      rotation.x = 1;
-      animationTarget = 'rotation.x';
-    } else if (axis.y > 0) {
-      rotation.y = 1;
-      animationTarget = 'rotation.y';
-    } else if (axis.z > 0) {
-      rotation.z = 1;
-      animationTarget = 'rotation.z';
-    }
+    // set the rotation animation target axis
+    axes.forEach(_axis => {
+      if (axis[_axis] > 0) {
+        animationTarget = 'rotation.' + _axis;
+      }
+    });
 
+    // animation
     const framerate: number = 20;
     const animation = new Animation('rotationAnimation', animationTarget,
       framerate, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CONSTANT);
-
     let keyframes = [];
+
     keyframes.push({ frame: 0, value: 0 });
     keyframes.push({ frame: framerate / 4, value: amount });
     animation.setKeys(keyframes);
 
     this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
-      boxArray.forEach(box => {
-        // remove the box from the rotation animation parent
-        // box.parent = null;
-
-        // apply rotation for each box inside the matrix
-        console.log(box.position);
-
-        // clean up
-        // root.dispose();
-      });
+      // once the animation is finished, apply the transformations
+      this._rotateInternal(boxArray, axis, amount);
     });
+  }
 
+  _rotateInternal(boxes: Array<Mesh>, axis, amount) {
+    boxes.forEach(box => {
+      const oldPos = box.position.clone();
+
+      // remove the box from the rotation animation parent
+      box.parent = null;
+
+      // apply rotation for each box inside the matrix
+      box.rotate(axis, amount);
+
+      // translate the representation to the updated position
+      if (axis.x > 0) {
+        box.position.z = oldPos.y * Math.sign(amount);
+        box.position.y = oldPos.z * Math.sign(amount * -1);
+      } else if (axis.y > 0) {
+        box.position.x = oldPos.z * Math.sign(amount);
+        box.position.z = oldPos.x * Math.sign(amount * -1);
+      } else if (axis.z > 0) {
+        box.position.y = oldPos.x * Math.sign(amount);
+        box.position.x = oldPos.y * Math.sign(amount * -1);
+      }
+    });
   }
 }
