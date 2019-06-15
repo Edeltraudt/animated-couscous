@@ -94,6 +94,9 @@ export class Cube {
             boxArray.push(this.model[x][y][z].box);
             modelClone[x][y][z] = this.model[x][y][z];
             this.model[x][y][z].box.parent = root;
+
+            // rotate the face colors representation for win condition check
+            this.model[x][y][z].rotateFaceColors(axis, amount);
           }
         }
       }

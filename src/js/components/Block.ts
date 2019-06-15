@@ -1,6 +1,5 @@
-import { Color3, Color4, Vector3, StandardMaterial, Material, Scene, MeshBuilder, Mesh } from "@babylonjs/core";
+import { Color3, Color4, Vector3, StandardMaterial, Scene, MeshBuilder, Mesh } from "@babylonjs/core";
 
-import { rgbToColor } from '../helpers';
 import { COLORS } from "./Colors";
 
 export class Block {
@@ -27,6 +26,48 @@ export class Block {
     });
   }
 
+  rotateFaceColors(axis: Vector3, amount: number) {
+    const clone = this.faceColors.slice(0);
+
+    if (axis.x > 0) {
+      if (amount > 0) {
+        this.faceColors[0] = clone[4];
+        this.faceColors[1] = clone[5];
+        this.faceColors[4] = clone[1];
+        this.faceColors[5] = clone[0];
+      } else {
+        this.faceColors[0] = clone[5];
+        this.faceColors[1] = clone[4];
+        this.faceColors[4] = clone[0];
+        this.faceColors[5] = clone[1];
+      }
+    } else if (axis.y > 0) {
+      if (amount > 0) {
+        this.faceColors[0] = clone[3];
+        this.faceColors[1] = clone[2];
+        this.faceColors[2] = clone[0];
+        this.faceColors[3] = clone[1];
+      } else {
+        this.faceColors[0] = clone[2];
+        this.faceColors[1] = clone[3];
+        this.faceColors[2] = clone[1];
+        this.faceColors[3] = clone[0];
+      }
+    } else if (axis.z > 0) {
+      if (amount > 0) {
+        this.faceColors[2] = clone[4];
+        this.faceColors[3] = clone[5];
+        this.faceColors[4] = clone[2];
+        this.faceColors[5] = clone[3];
+      } else {
+        this.faceColors[2] = clone[5];
+        this.faceColors[3] = clone[4];
+        this.faceColors[4] = clone[3];
+        this.faceColors[5] = clone[2];
+      }
+    }
+  }
+
   set position(vector: Vector3) {
     if (this.box !== null) {
       this.box.position = vector;
@@ -41,15 +82,27 @@ export class Block {
     }
   }
 
-  set rotation(vector: Vector3) {
-    this.rotation = vector;
-  }
-
-  get rotation(): Vector3 {
+  get rotation() {
     if (this.box !== null) {
       return this.box.rotation;
     } else {
-      return Vector3.Zero();
+      // return Vector3.Zero();
+    }
+  }
+
+  getColor(face: Vector3) {
+    if (face.z > 0) {
+      return this.faceColors[0];
+    } else if (face.z < 0) {
+      return this.faceColors[1];
+    } else if (face.x > 0) {
+      return this.faceColors[2];
+    } else if (face.x < 0) {
+      return this.faceColors[3];
+    } else if (face.y > 0) {
+      return this.faceColors[4];
+    } else if (face.y < 0) {
+      return this.faceColors[5];
     }
   }
 
