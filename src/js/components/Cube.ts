@@ -37,11 +37,12 @@ export class Cube {
    * Render and randomly paint all individual blocks inside the cube.
    */
   render(): void {
+    const colors = this._colors();
+
     for (let x = 0; x < this.model.length; x++) {
       for (let y = 0; y < this.model[x].length; y++) {
         for (let z = 0; z < this.model[x][y].length; z++) {
           const block = this.model[x][y][z];
-          const colors = this._colors();
           let faces = [];
 
           if (x === this.size - 1) {
