@@ -8,6 +8,7 @@ import { Engine, Scene, ArcRotateCamera, Animation, DirectionalLight, Vector3, P
 window.addEventListener('DOMContentLoaded', function () {
   const canvas = <HTMLCanvasElement> document.getElementById('view');
   const engine = new Engine(canvas, true);
+  const controls = document.querySelector('.controls');
   let camera: ArcRotateCamera;
   let cube: Cube;
   let scene: Scene;
@@ -22,6 +23,9 @@ window.addEventListener('DOMContentLoaded', function () {
     camera.attachControl(canvas, false);
     cameraPosition = camera.position.clone();
 
+    // disable zoom
+    camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
+
     new DirectionalLight('sunLeft', new Vector3(-1, -1, -1), scene);
     new DirectionalLight('sunRight', new Vector3(1, 1, 1), scene);
 
@@ -31,13 +35,12 @@ window.addEventListener('DOMContentLoaded', function () {
     cube = new Cube(3, scene);
     cube.render();
 
+    controls.classList.remove('-hidden');
+
     return scene;
   }
 
   scene = createScene();
-
-  scene.registerAfterRender(function () {
-  });
 
   engine.runRenderLoop(function () {
     scene.render();
@@ -57,17 +60,38 @@ window.addEventListener('DOMContentLoaded', function () {
 
     animation.setKeys(keyframes);
     camera.animations.push(animation);
-    scene.beginAnimation(camera, 0, 20);
-    // scene.beginAnimation(camera, 0, 100, false, 1);
-
-    // scene.onBeforeRenderObservable.add(() => {
-    //   camera.rebuildAnglesAndRadius();
-    // });
+    scene.beginAnimation(camera, 0, 20, false, 1, () => {
+      camera.rebuildAnglesAndRadius();
+    });
   }
 
   document.addEventListener('pointerup', function () {
-    console.log(camera);
     resetCamera(camera);
-    // console.log(camera);
+    controls.classList.remove('-hidden');
+  });
+
+  document.addEventListener('pointerdown', (e: Event) => {
+    if (!(e.target instanceof Element &&
+          e.target.classList.contains('controls-button'))) {
+      controls.classList.add('-hidden');
+    }
+  });
+
+  controls.querySelectorAll('.controls-button').forEach(button => {
+    button.addEventListener('click', e => {
+      const axis = button.getAttribute('data-axis');
+      const target = button.getAttribute('data-target');
+      const axisVector = new Vector3();
+      let amount = Math.PI / -2;
+
+      if (axis === 'x') {
+        amount *= -1;
+      }
+
+      axisVector[axis] = target;
+
+      e.preventDefault();
+      cube.rotateAxis(axisVector, amount);
+    });
   });
 });
