@@ -50,6 +50,9 @@ window.addEventListener('DOMContentLoaded', function () {
     engine.resize();
   });
 
+  /**
+   * Animates the camera view back to the default position.
+   */
   const resetCamera = function(camera: ArcRotateCamera) {
     const animation = new Animation('cameraPosition', 'position', 30,
       Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CONSTANT);
@@ -82,11 +85,10 @@ window.addEventListener('DOMContentLoaded', function () {
       const axis = button.getAttribute('data-axis');
       const target = button.getAttribute('data-target');
       const axisVector = new Vector3();
-      let amount = Math.PI / -2;
+      let amount = Math.PI / 2;
 
-      if (axis === 'x') {
-        amount *= -1;
-      }
+      // rotation the other way around feels better for x
+      if (axis === 'z') amount *= -1;
 
       axisVector[axis] = target;
 
