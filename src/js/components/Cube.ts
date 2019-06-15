@@ -125,7 +125,7 @@ export class Cube {
   _colors(): Array<Color4> {
     const perSide = this.size * this.size;
     const colors = new Array<Color4>();
-    let sides = 6;
+    let sides = 6 + 1;
 
     while(--sides) {
       for (let i = 0; i < perSide; i++) {
