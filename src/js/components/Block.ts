@@ -1,16 +1,7 @@
 import { Color3, Color4, Vector3, StandardMaterial, Material, Scene, MeshBuilder, Mesh } from "@babylonjs/core";
 
 import { rgbToColor } from '../helpers';
-
-const blockColors = [
-  { key: 'default', color: rgbToColor(30, 39, 46) },
-  { key: 'red', color: rgbToColor(234, 32, 39) },
-  { key: 'orange', color: rgbToColor(255, 121, 63) },
-  { key: 'yellow', color: rgbToColor(251, 197, 49) },
-  { key: 'green', color: rgbToColor(62, 165, 18) },
-  { key: 'blue', color: rgbToColor(0, 168, 255) },
-  { key: 'white', color: rgbToColor(245, 246, 250) }
-];
+import { COLORS } from "./Colors";
 
 export class Block {
   faceColors: Array<Color4>;
@@ -25,14 +16,14 @@ export class Block {
     this.material.specularColor = new Color3(0.2, 0.2, 0.2);
     this.key = key;
     this.faceColors = [
-      blockColors[0].color, blockColors[0].color, blockColors[0].color,
-      blockColors[0].color, blockColors[0].color, blockColors[0].color
+      COLORS[0].color, COLORS[0].color, COLORS[0].color,
+      COLORS[0].color, COLORS[0].color, COLORS[0].color
     ];
   }
 
-  setFaceColors(values: [{ index: number, colorKey: number }]) {
+  setFaceColors(values: [{ index: number, color: Color4 }]) {
     values.forEach(value => {
-      this.faceColors[value.index] = blockColors[value.colorKey].color;
+      this.faceColors[value.index] = value.color;
     });
   }
 

@@ -1,7 +1,7 @@
 .logo {
   $offset: 2.5vmin;
 
-  color: white;
+  color: rgba(white, 0.9);
   font-family: $ff-text;
   font-size: 50vmin;
   letter-spacing: 1px;
@@ -12,8 +12,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-shadow:
-    $offset * 1 $offset * 1 cyan,
-    $offset * 2 $offset * 2 magenta;
+    $offset * 1 $offset * 1 rgba(cyan, 0.75),
+    $offset * 2 $offset * 2 rgba(magenta, 0.75);
   position: absolute;
   z-index: 0;
 }

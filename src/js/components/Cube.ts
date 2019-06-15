@@ -1,5 +1,7 @@
-import { StandardMaterial, Scene, Vector3, TransformNode, Mesh, Animation } from '@babylonjs/core';
+import { StandardMaterial, Scene, Vector3, TransformNode, Mesh, Animation, Color4 } from '@babylonjs/core';
 import { Block } from './Block';
+import { COLORS } from './Colors';
+import { random, shuffle } from '../helpers';
 
 export class Cube {
   size: number = 3;
@@ -32,31 +34,32 @@ export class Cube {
   }
 
   /**
-   * Render and paint all individual blocks inside the cube.
+   * Render and randomly paint all individual blocks inside the cube.
    */
   render(): void {
     for (let x = 0; x < this.model.length; x++) {
       for (let y = 0; y < this.model[x].length; y++) {
         for (let z = 0; z < this.model[x][y].length; z++) {
           const block = this.model[x][y][z];
+          const colors = this._colors();
           let faces = [];
 
           if (x === this.size - 1) {
-            faces.push({ index: 2, colorKey: 1 });
+            faces.push({ index: 2, color: colors.pop() });
           } else if (x === 0) {
-            faces.push({ index: 3, colorKey: 4 });
+            faces.push({ index: 3, color: colors.pop() });
           }
 
           if (y === this.size - 1) {
-            faces.push({ index: 4, colorKey: 2 });
+            faces.push({ index: 4, color: colors.pop() });
           } else if (y === 0) {
-            faces.push({ index: 5, colorKey: 5 });
+            faces.push({ index: 5, color: colors.pop() });
           }
 
           if (z === this.size - 1) {
-            faces.push({ index: 0, colorKey: 3 });
+            faces.push({ index: 0, color: colors.pop() });
           } else if (z === 0) {
-            faces.push({ index: 1, colorKey: 6 });
+            faces.push({ index: 1, color: colors.pop() });
           }
 
           block.setFaceColors(faces);
@@ -119,6 +122,30 @@ export class Cube {
     });
   }
 
+  _colors(): Array<Color4> {
+    const perSide = this.size * this.size;
+    const colors = new Array<Color4>();
+    let sides = 6;
+
+    while(--sides) {
+      for (let i = 0; i < perSide; i++) {
+        colors.push(COLORS[sides].color);
+      }
+    }
+
+    return shuffle(colors);
+  }
+
+  _rowColors(): Array<Color4> {
+    const colors = new Array<Color4>();
+
+    for (let i = 0; i < this.size; i++) {
+      colors.push(COLORS[random(0, COLORS.length)].color);
+    }
+
+    return colors;
+  }
+
   /**
    * Update the rotation for all blocks inside the rotated axis
    */
@@ -136,7 +163,7 @@ export class Cube {
       box.parent = null;
 
       // apply rotation for each box inside the matrix
-      box.rotate(axis, amount);
+      box.rotateAround(Vector3.Zero(), axis, amount);
 
       // calculate new positions in the matrix
       if (axis.x > 0) {
@@ -155,6 +182,7 @@ export class Cube {
       box.position.y = newY;
       box.position.z = newZ;
 
+      // apply position rotation to model reference matrix
       const newArrX = this._getIndexFromPosition(newX);
       const newArrY = this._getIndexFromPosition(newY);
       const newArrZ = this._getIndexFromPosition(newZ);
