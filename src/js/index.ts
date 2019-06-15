@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', function () {
     // disable zoom
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
-    new DirectionalLight('sunLeft', new Vector3(-1, -1, -1), scene);
+    new DirectionalLight('sunLeft', new Vector3(-1, -2, -1), scene);
     new DirectionalLight('sunRight', new Vector3(1, 1, 1), scene);
 
     // point light from front
