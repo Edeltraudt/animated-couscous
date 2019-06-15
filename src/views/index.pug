@@ -9,6 +9,11 @@ html(lang=de)
   body.match3
     canvas#view
 
+    h1.logo Match3
+
+    .info
+      p.info-text Drag to rotate.
+
     .controls.-hidden
       .controls-x.controls-wrap
         button.controls-button(data-axis='z' data-target='1')
@@ -18,6 +23,10 @@ html(lang=de)
         button.controls-button(data-axis='y' data-target='3')
         button.controls-button(data-axis='y' data-target='2')
         button.controls-button(data-axis='y' data-target='1')
+      .controls-y.-inverse.controls-wrap
+        button.controls-button.-inverse(data-axis='y' data-target='3')
+        button.controls-button.-inverse(data-axis='y' data-target='2')
+        button.controls-button.-inverse(data-axis='y' data-target='1')
       .controls-z.controls-wrap
         button.controls-button(data-axis='x' data-target='3')
         button.controls-button(data-axis='x' data-target='2')

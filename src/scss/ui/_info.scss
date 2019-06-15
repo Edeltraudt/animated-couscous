@@ -1,0 +1,14 @@
+.info {
+  bottom: 0;
+  color: white;
+  font-family: $ff-text;
+  left: 0;
+  padding: 20px;
+  position: absolute;
+
+  p {
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

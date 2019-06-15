@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   const createScene = function () {
     const scene = new Scene(engine);
-    scene.clearColor = rgbToColor(15, 15, 15);
+    scene.clearColor = rgbToColor(15, 15, 15, 0);
 
     camera = new ArcRotateCamera('camera', Math.PI / 4, Math.PI / 4, 10, Vector3.Zero(), scene);
     camera.setTarget(Vector3.Zero());
@@ -90,7 +90,9 @@ window.addEventListener('DOMContentLoaded', function () {
       // rotation the other way around feels better for x
       if (axis === 'z') amount *= -1;
 
-      axisVector[axis] = target;
+      if (button.classList.contains('-inverse')) amount *= -1;
+
+      axisVector[axis] = Number.parseInt(target);
 
       e.preventDefault();
       cube.rotateAxis(axisVector, amount);

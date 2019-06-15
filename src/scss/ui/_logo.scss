@@ -1,0 +1,19 @@
+.logo {
+  $offset: 2.5vmin;
+
+  color: white;
+  font-family: $ff-text;
+  font-size: 50vmin;
+  letter-spacing: 1px;
+  margin: 0;
+  opacity: 0.1;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow:
+    $offset * 1 $offset * 1 cyan,
+    $offset * 2 $offset * 2 magenta;
+  position: absolute;
+  z-index: 0;
+}

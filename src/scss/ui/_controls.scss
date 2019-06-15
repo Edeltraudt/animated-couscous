@@ -15,6 +15,7 @@ $offset-x: 40;
   transform: translateX(-50%);
   transition: opacity 0.4s ease;
   width: $cube-size * 0.925;
+  z-index: 11;
 
   &.-hidden {
     opacity: 0;
@@ -48,6 +49,14 @@ $offset-x: 40;
     right: 0;
     transform: rotate(10.5deg);
     top: percentage($offset-top / $total-y);
+
+    &.-inverse {
+      left: 0;
+      margin-left: -25px;
+      margin-right: 0;
+      right: auto;
+      transform: rotate(-10.5deg) scaleX(-1);
+    }
   }
 
   &-z {
