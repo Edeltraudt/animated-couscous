@@ -19,7 +19,7 @@ export class Cube {
   }
 
   /**
-   * Build the internal cube reference
+   * Build the internal cube reference.
    */
   build(): void {
     this.model = this._createMatrix(this.size, (matrix, x, y) => {
@@ -29,22 +29,6 @@ export class Cube {
         matrix[x][y][z] = new Block(key + z, this.scene);
       }
     });
-  }
-
-  _createMatrix(size: number = this.size, fillFn?: (matrix, x, y) => void): Array<any> {
-    const matrix = new Array(size);
-
-    for (let x = 0; x < size; x++) {
-      matrix[x] = new Array(size);
-
-      for (let y = 0; y < size; y++) {
-        matrix[x][y] = new Array(size);
-
-        if (fillFn) fillFn(matrix, x, y);
-      }
-    }
-
-    return matrix;
   }
 
   /**
@@ -148,13 +132,13 @@ export class Cube {
       let newY = box.position.y;
       let newZ = box.position.z;
 
-      // remove the box from the rotation animation parent
+      // remove box from animation parent, resetting the position
       box.parent = null;
 
       // apply rotation for each box inside the matrix
       box.rotate(axis, amount);
 
-      // translate the representation to the updated position
+      // calculate new positions in the matrix
       if (axis.x > 0) {
         newZ = oldPos.y * Math.sign(amount);
         newY = oldPos.z * Math.sign(amount * -1);
@@ -166,6 +150,7 @@ export class Cube {
         newX = oldPos.y * Math.sign(amount * -1);
       }
 
+      // apply position rotation to box representations
       box.position.x = newX;
       box.position.y = newY;
       box.position.z = newZ;
@@ -178,7 +163,30 @@ export class Cube {
     });
   }
 
+  /**
+   * Translates a box position inside the world to an array index.
+   */
   _getIndexFromPosition(position) {
     return (position - (this.gap * Math.sign(position))) + 1;
+  }
+
+  /**
+   * Builds an empty 3D-matrix.
+   * Optionally takes a function to populate the cells.
+   */
+  _createMatrix(size: number = this.size, fillFn?: (matrix, x, y) => void): Array<any> {
+    const matrix = new Array(size);
+
+    for (let x = 0; x < size; x++) {
+      matrix[x] = new Array(size);
+
+      for (let y = 0; y < size; y++) {
+        matrix[x][y] = new Array(size);
+
+        if (fillFn) fillFn(matrix, x, y);
+      }
+    }
+
+    return matrix;
   }
 }
