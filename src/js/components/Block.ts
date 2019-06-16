@@ -55,13 +55,13 @@ export class Block {
       }
     } else if (axis.z > 0) {
       if (amount > 0) {
-        this.faceColors[2] = clone[4];
-        this.faceColors[3] = clone[5];
+        this.faceColors[2] = clone[5];
+        this.faceColors[3] = clone[4];
         this.faceColors[4] = clone[2];
         this.faceColors[5] = clone[3];
       } else {
-        this.faceColors[2] = clone[5];
-        this.faceColors[3] = clone[4];
+        this.faceColors[2] = clone[4];
+        this.faceColors[3] = clone[5];
         this.faceColors[4] = clone[3];
         this.faceColors[5] = clone[2];
       }
