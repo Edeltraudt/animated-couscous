@@ -125,27 +125,23 @@ export class Cube {
     this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
       // once the animation is finished, apply the transformations
       this._rotateInternal(boxArray, modelClone, axis, amount);
-      this._checkMatches(axis);
+      this._checkMatches();
     });
   }
 
   /**
    * Checks the cube for 3-in-a-row
    */
-  _checkMatches(rotatedAxis?: Vector3) {
+  _checkMatches() {
     console.log('Check Matches');
     const highlight = new HighlightLayer('hl', this.scene);
     // start in the middle [2][1][0] - [2][1][2] and spread
 
-    let previousColor: Color4;
-
-    let exposedSide = new Vector3(1, 0, 0);
-
     // get all sides of the cube
     for (let x = 0; x < this.model.length; x++) {
       for (let y = 0; y < this.model[x].length; y++) {
-        let previousHorizontal: Color4;
-        let previousVertical: Color4;
+        let previousHorizontal = { x: null, y: null, z: null};
+        let previousVertical = { x: null, y: null, z: null };
         // let isMatching = false;
         let horizontalMatch = false;
         let verticalMatch = false;
@@ -153,27 +149,27 @@ export class Cube {
         // check horizontal rows
         for (let z = 0; z < this.model[x][y].length; z++) {
           // limit to visible sides
-          let exposedSide = new Vector3();
+          let exposedSides = new Vector3();
 
           // highlight.addMesh(this.model[x][y][z].box, Color3.Green());
 
-          if (x === this.size - 1) exposedSide.x = 1;
-          else if (y === this.size - 1) exposedSide.y = 1;
-          else if (z === this.size - 1) exposedSide.z = 1;
+          if (x === this.size - 1) exposedSides.x = 1;
+          if (y === this.size - 1) exposedSides.y = 1;
+          if (z === this.size - 1) exposedSides.z = 1;
 
-          if (JSON.stringify(exposedSide) !== JSON.stringify(new Vector3())) {
-            console.log(this.model[x][y][z].key, exposedSide);
+          if (exposedSides.x !== 0 || exposedSides.y !== 0 || exposedSides.z !== 0) {
+            console.log(this.model[x][y][z].key, exposedSides);
             if (previousHorizontal) {
-              if (this.model[x][y][z].getColor(exposedSide) === previousHorizontal) {
+              if (this.model[x][y][z].getColor(exposedSides) === previousHorizontal) {
                 horizontalMatch = true;
               } else {
                 horizontalMatch = false;
               }
             }
 
-            previousHorizontal = this.model[x][y][z].getColor(exposedSide);
+            previousHorizontal = this.model[x][y][z].getColor(exposedSides);
             // if (previousHorizontal) {
-            //   if (this.model[x][y][z].getColor(exposedSide) === previousHorizontal) {
+            //   if (this.model[x][y][z].getColor(exposedSides) === previousHorizontal) {
             //     horizontalMatch = true;
             //     // console.log(this.model[x][y][z].key);
             //   } else {
@@ -186,8 +182,8 @@ export class Cube {
 
 
         if (horizontalMatch) {
-          const color = COLORS.find(c => c.color === previousHorizontal);
-          console.log('matching rows with', color.key);
+          // const color = COLORS.find(c => c.color === previousHorizontal);
+          // console.log('matching rows with', color.key);
         }
         console.log('\n');
       }
