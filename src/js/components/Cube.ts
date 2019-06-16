@@ -11,11 +11,13 @@ export class Cube {
   centerOffset: number = 0;
   rotationCounter: number = 0;
   gap: number = 0.05;
+  hl: HighlightLayer;
 
   constructor(size: number, scene: Scene) {
     this.size = size;
     this.scene = scene;
     this.centerOffset = (size - 1) / 2;
+    this.hl = new HighlightLayer('hl', this.scene);
 
     this.build();
   }
@@ -83,7 +85,7 @@ export class Cube {
     const root = new TransformNode('rotationAxis');
     const axes = ['x', 'y', 'z'];
     let animationTarget: string = '';
-    let boxArray: Array<Mesh> = [];
+    let blockArray: Array<Block> = [];
     let modelClone: ([]|Block)[] = this._createMatrix();
 
     // get and group all boxes affected by the rotation
@@ -93,12 +95,9 @@ export class Cube {
           if ((axis.x > 0 && (x === axis.x - 1)) ||
               (axis.y > 0 && (y === axis.y - 1)) ||
               (axis.z > 0 && (z === axis.z - 1))) {
-            boxArray.push(this.model[x][y][z].box);
+            blockArray.push(this.model[x][y][z]);
             modelClone[x][y][z] = this.model[x][y][z];
             this.model[x][y][z].box.parent = root;
-
-            // rotate the face colors representation for win condition check
-            this.model[x][y][z].rotateFaceColors(axis, amount);
           }
         }
       }
@@ -124,130 +123,17 @@ export class Cube {
 
     this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
       // once the animation is finished, apply the transformations
-      this._rotateInternal(boxArray, modelClone, axis, amount);
+      this._rotateInternal(blockArray, modelClone, axis, amount);
       this._checkMatches();
     });
   }
 
   /**
-   * Checks the cube for 3-in-a-row
-   */
-  _checkMatches() {
-    console.log('Check Matches');
-    const highlight = new HighlightLayer('hl', this.scene);
-    // start in the middle [2][1][0] - [2][1][2] and spread
-
-    // get all sides of the cube
-    for (let x = 0; x < this.size; x++) {
-      for (let y = 0; y < this.size; y++) {
-        let previousHorizontal = { x: null, y: null, z: null};
-        let previousVertical = { x: null, y: null, z: null };
-        // let isMatching = false;
-        let horizontalMatch = false;
-        let verticalMatch = false;
-
-        // check horizontal rows
-        for (let z = 0; z < this.size; z++) {
-          // limit to visible sides
-          let exposedSides = new Vector3();
-
-          // highlight.addMesh(this.model[x][y][z].box, Color3.Green());
-
-          if (x === this.size - 1) exposedSides.x = 1;
-          if (y === this.size - 1) exposedSides.y = 1;
-          if (z === this.size - 1) exposedSides.z = 1;
-
-          if (exposedSides.x !== 0 || exposedSides.y !== 0 || exposedSides.z !== 0) {
-            console.log(this.model[x][y][z].key, exposedSides);
-            if (previousHorizontal) {
-              if (this.model[x][y][z].getColor(exposedSides) === previousHorizontal) {
-                horizontalMatch = true;
-              } else {
-                horizontalMatch = false;
-              }
-            }
-
-            previousHorizontal = this.model[x][y][z].getColor(exposedSides);
-            // if (previousHorizontal) {
-            //   if (this.model[x][y][z].getColor(exposedSides) === previousHorizontal) {
-            //     horizontalMatch = true;
-            //     // console.log(this.model[x][y][z].key);
-            //   } else {
-            //     horizontalMatch = false;
-            //   }
-            // }
-          }
-
-        }
-
-
-        if (horizontalMatch) {
-          // const color = COLORS.find(c => c.color === previousHorizontal);
-          // console.log('matching rows with', color.key);
-        }
-        console.log('\n');
-      }
-    }
-
-    // for (let i = 0; i < this.model[2][1].length; i++) {
-    //   // console.log(this.model[2][1][i]);
-    //   highlight.addMesh(this.model[2][1][i].box, Color3.Green());
-    //   let exposedSide = new Vector3(1, 0, 0);
-
-    //   if (previousColor) {
-    //     if (this.model[2][1][i].getColor(exposedSide) === previousColor) {
-    //       isMatching = true;
-    //       console.log('It\'s a match!')
-    //     } else {
-    //       isMatching = false;
-    //     }
-    //   } else {
-    //     previousColor = this.model[2][1][i].getColor(exposedSide);
-    //   }
-
-    //   // console.log(this.model[2][1][i].getColor(exposedSide));
-    // }
-
-    // if (isMatching) {
-    //   this._checkMatches();
-    // }
-  }
-
-  /**
-   * Generates an array of randomised colors for the entire cube.
-   */
-  _colors(): Array<Color4> {
-    const perSide = this.size * this.size;
-    const colors = new Array<Color4>();
-    let sides = 6 + 1;
-
-    while(--sides) {
-      for (let i = 0; i < perSide; i++) {
-        colors.push(COLORS[sides % 2 + 1].color);
-      }
-    }
-
-    return shuffle(colors);
-  }
-
-  /**
-   * Generates an array of randomised colors for one row.
-   */
-  _rowColors(): Array<Color4> {
-    const colors = new Array<Color4>();
-
-    for (let i = 0; i < this.size; i++) {
-      colors.push(COLORS[random(0, COLORS.length)].color);
-    }
-
-    return colors;
-  }
-
-  /**
    * Update the rotation for all blocks inside the rotated axis
    */
-  _rotateInternal(boxes: Array<Mesh>, modelClone: ([]|Block)[], axis, amount) {
-    boxes.forEach(box => {
+  _rotateInternal(blocks: Array<Block>, modelClone: ([] | Block)[], axis, amount) {
+    blocks.forEach(block => {
+      const box = block.box;
       const oldPos = box.position.clone();
       const arrX = this._getIndexFromPosition(box.position.x);
       const arrY = this._getIndexFromPosition(box.position.y);
@@ -284,8 +170,109 @@ export class Cube {
       const newArrY = this._getIndexFromPosition(newY);
       const newArrZ = this._getIndexFromPosition(newZ);
       this.model[newArrX][newArrY][newArrZ] =
-           modelClone[arrX][arrY][arrZ];
+        modelClone[arrX][arrY][arrZ];
+      block.key = '' + newArrX + newArrY + newArrZ;
+
+      // rotate the face colors representation for win condition check
+      block.rotateFaceColors(axis, amount);
     });
+  }
+
+  /**
+   * Checks the cube for 3-in-a-row
+   */
+  _checkMatches() {
+    // iterate over axes
+    for (let x = 0; x < 3; x++) {
+      const exposedSide = new Vector3(
+        x === 0 ? 1 : 0,
+        x === 1 ? 1 : 0,
+        x === 2 ? 1 : 0
+      );
+
+      // iterate over columns/rows
+      for (let y = 0; y < this.size; y++) {
+        let previous = { col: null, row: null };
+        let match = { col: true, row: true };
+        let matches = { col: [], row: [] };
+
+        // iterate over items
+        for (let z = 0; z < this.size; z++) {
+
+          // both column and row
+          for (let rowOrColumn in match) {
+            let order = {};
+            order[x] = this.size - 1;
+
+            if (rowOrColumn === 'row') {
+              order[(x + 1) % 3] = y;
+              order[(x + 2) % 3] = z;
+            } else {
+              order[(x + 1) % 3] = z;
+              order[(x + 2) % 3] = y;
+            }
+
+            const block = this.model[order[0]][order[1]][order[2]];
+
+            matches[rowOrColumn].push(block);
+
+            if (previous[rowOrColumn] !== null) {
+              if (previous[rowOrColumn].getColor(exposedSide) !== block.getColor(exposedSide)) {
+                match[rowOrColumn] = false;
+                matches[rowOrColumn] = [];
+              }
+            }
+
+            previous[rowOrColumn] = block;
+          }
+        }
+
+        if (match.col) this._replaceRow(matches.col, exposedSide);
+        if (match.row) this._replaceRow(matches.row, exposedSide);
+
+        // if (match.col || match.row) this._checkMatches();
+      }
+    }
+  }
+
+  _replaceRow(blocks: Array<Block>, side: Vector3) {
+    const colors = this._rowColors();
+    blocks.forEach(block => {
+      this.hl.addMesh(block.box, Color3.Magenta());
+      window.setTimeout(() => {
+        this.hl.removeMesh(block.box);
+        block.setFaceColorFromVector(side, colors.pop());
+        block.render();
+        // this._checkMatches();
+      }, 300)
+    });
+  }
+
+  /**
+   * Generates an array of randomised colors for the entire cube.
+   */
+  _colors(): Array<Color4> {
+    const colors = new Array<Color4>();
+    let total = this.size * this.size * 6;
+
+    while(total--) {
+      colors.push(COLORS[random(0, COLORS.length)].color);
+    }
+
+    return colors;
+  }
+
+  /**
+   * Generates an array of randomised colors for one row.
+   */
+  _rowColors(): Array<Color4> {
+    const colors = new Array<Color4>();
+
+    for (let i = 0; i < this.size; i++) {
+      colors.push(COLORS[random(0, COLORS.length)].color);
+    }
+
+    return colors;
   }
 
   /**
