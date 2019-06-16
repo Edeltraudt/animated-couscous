@@ -1,7 +1,11 @@
-import { Color4 } from '@babylonjs/core';
+import { Color3, Color4 } from '@babylonjs/core';
 
 export function rgbToColor(r: number, g: number, b: number, a: number = 1): Color4 {
   return new Color4((r / 255), (g / 255), (b / 255), a);
+}
+
+export function rgbToColor3(r: number, g: number, b: number): Color3 {
+  return new Color3((r / 255), (g / 255), (b / 255));
 }
 
 export function random(low: number, high: number): number {

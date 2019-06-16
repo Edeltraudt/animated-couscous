@@ -1,7 +1,7 @@
 import { StandardMaterial, Scene, Vector3, TransformNode, Mesh, Animation, Color4, HighlightLayer, Color3 } from '@babylonjs/core';
 import { Block } from './Block';
 import { COLORS } from './Colors';
-import { random, shuffle } from '../helpers';
+import { random, rgbToColor3 } from '../helpers';
 
 export class Cube {
   size: number = 3;
@@ -184,7 +184,7 @@ export class Cube {
   }
 
   /**
-   * Checks the cube for 3-in-a-row
+   * Checks the cube for 3-in-a-row.
    */
   _checkMatches() {
     // iterate over axes
@@ -250,7 +250,7 @@ export class Cube {
   _replaceRow(blocks: Array<Block>, side: Vector3) {
     const colors = this._rowColors();
     blocks.forEach(block => {
-      this.hl.addMesh(block.box, Color3.Magenta());
+      this.hl.addMesh(block.box, rgbToColor3(255, 255, 102));
       window.setTimeout(() => {
         this.hl.removeMesh(block.box);
         block.setFaceColorFromVector(side, colors.pop());
