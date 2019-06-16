@@ -6,7 +6,132 @@ html(lang=de)
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     title Match3
 
-  body.match3
+    style.
+      html { background: #03010f }
+
+      .loader {
+        background: #03010f;
+        display: flex;
+        height: 100%;
+        left: 0;
+        opacity: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        transition: opacity 0.4s;
+        z-index: 20;
+      }
+
+      .loading .loader, .finished .loader {
+        opacity: 1;
+      }
+
+      .loader-center {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+      }
+
+      .loader-text {
+        color: white;
+        margin: 3rem -10px -2rem 0;
+      }
+
+      .loader-wrap {
+        display: flex;
+      }
+
+      .loader-block {
+        background: var(--color);
+        display: block;
+        height: 2rem;
+        position: relative;
+        transform-style: preserve-3d;
+        transform: rotateX(0) translate3d(0, 0, 0);
+        transition: transform 0.4s;
+        width: 2rem;
+      }
+
+      .loading .loader-block {
+        animation: rotate 3s infinite;
+      }
+
+      .loader-block-wrap:nth-child(3) .loader-block { animation-delay: 0s }
+      .loader-block-wrap:nth-child(2) .loader-block { animation-delay: 0.66s }
+      .loader-block-wrap:nth-child(1) .loader-block { animation-delay: 1.33s }
+
+      @keyframes rotate {
+        0%, 12.5% { transform: rotateX(0) translate3d(0,0,0); }
+        25%, 37.5% { transform: rotateX(-90deg) translate3d(0,0,0); }
+        50%, 62.5% { transform: rotateX(-180deg) translate3d(0,0,0); }
+        75%, 87.5% { transform: rotateX(-270deg) translate3d(0,0,0); }
+        100% { transform: rotateX(-360deg) translate3d(0,0,0); }
+      }
+
+      .loader-block-wrap {
+        height: 2rem;
+        margin: 2px;
+        perspective: 400px;
+        width: 2rem;
+      }
+
+      .loader-block--top, .loader-block--bottom,
+      .loader-block--front, .loader-block--back {
+        left: 0;
+        height: 2rem;
+        position: absolute;
+        width: 2rem;
+      }
+      .loader-block--front  {
+        background: #fea0fe;
+        transform: rotateY(0deg) translateZ(1rem);
+      }
+      .loader-block--back  {
+        background: #fea0fe;
+        transform: rotateY(180deg) translateZ(1rem);
+      }
+      .loader-block--top {
+        background: #79fffe;
+        transform: rotateX(90deg) translateZ(1rem);
+      }
+      .loader-block--bottom {
+        background: #79fffe;
+        transform: rotateX(-90deg) translateZ(1rem);
+      }
+
+    script.
+      window.addEventListener('DOMContentLoaded', () => {
+        window.setTimeout(() => {
+          document.body.classList.remove('loading');
+        }, 200);
+      })
+
+  body.match3.loading
+    .loader
+      .loader-center
+        .loader-wrap
+          .loader-block-wrap
+            .loader-block
+              .loader-block--front
+              .loader-block--top
+              .loader-block--back
+              .loader-block--bottom
+          .loader-block-wrap
+            .loader-block
+              .loader-block--front
+              .loader-block--top
+              .loader-block--back
+              .loader-block--bottom
+          .loader-block-wrap
+            .loader-block
+              .loader-block--front
+              .loader-block--top
+              .loader-block--back
+              .loader-block--bottom
+
+        .loader-text Please wait...
+
     canvas#view
 
     h1.logo Match3
