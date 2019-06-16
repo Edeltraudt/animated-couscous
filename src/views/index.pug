@@ -17,13 +17,15 @@ html(lang=de)
         opacity: 0;
         position: fixed;
         top: 0;
+        transition: opacity 0.4s, visibility 0.4s;
         width: 100%;
-        transition: opacity 0.4s;
+        visibility: hidden;
         z-index: 20;
       }
 
       .loading .loader, .finished .loader {
         opacity: 1;
+        visibility: visible;
       }
 
       .loader-center {
