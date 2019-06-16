@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edeltraudt/match3.git"
+    "url": "git+https://github.com/edeltraudt/animated-couscous.git"
   },
   "devDependencies": {
     "@babylonjs/core": "^4.0.3",
