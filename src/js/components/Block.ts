@@ -106,6 +106,16 @@ export class Block {
     }
   }
 
+  getColors(face: Vector3) {
+    const colors = { x: null, y: null, z: null };
+
+    colors.x = face.x > 0 ? this.faceColors[2] : this.faceColors[3];
+    colors.y = face.y > 0 ? this.faceColors[4] : this.faceColors[5];
+    colors.z = face.z > 0 ? this.faceColors[0] : this.faceColors[1];
+
+    return colors;
+  }
+
   render(position: Vector3): Mesh {
     this.box = MeshBuilder.CreateBox(this.key, {
       size: 1,
