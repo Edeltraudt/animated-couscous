@@ -39,9 +39,9 @@ export class Cube {
   render(): void {
     const colors = this._colors();
 
-    for (let x = 0; x < this.model.length; x++) {
-      for (let y = 0; y < this.model[x].length; y++) {
-        for (let z = 0; z < this.model[x][y].length; z++) {
+    for (let x = 0; x < this.size; x++) {
+      for (let y = 0; y < this.size; y++) {
+        for (let z = 0; z < this.size; z++) {
           const block = this.model[x][y][z];
           let faces = [];
 
@@ -87,9 +87,9 @@ export class Cube {
     let modelClone: ([]|Block)[] = this._createMatrix();
 
     // get and group all boxes affected by the rotation
-    for (let x = 0; x < this.model.length; x++) {
-      for (let y = 0; y < this.model[x].length; y++) {
-        for (let z = 0; z < this.model[x][y].length; z++) {
+    for (let x = 0; x < this.size; x++) {
+      for (let y = 0; y < this.size; y++) {
+        for (let z = 0; z < this.size; z++) {
           if ((axis.x > 0 && (x === axis.x - 1)) ||
               (axis.y > 0 && (y === axis.y - 1)) ||
               (axis.z > 0 && (z === axis.z - 1))) {
@@ -138,8 +138,8 @@ export class Cube {
     // start in the middle [2][1][0] - [2][1][2] and spread
 
     // get all sides of the cube
-    for (let x = 0; x < this.model.length; x++) {
-      for (let y = 0; y < this.model[x].length; y++) {
+    for (let x = 0; x < this.size; x++) {
+      for (let y = 0; y < this.size; y++) {
         let previousHorizontal = { x: null, y: null, z: null};
         let previousVertical = { x: null, y: null, z: null };
         // let isMatching = false;
@@ -147,7 +147,7 @@ export class Cube {
         let verticalMatch = false;
 
         // check horizontal rows
-        for (let z = 0; z < this.model[x][y].length; z++) {
+        for (let z = 0; z < this.size; z++) {
           // limit to visible sides
           let exposedSides = new Vector3();
 
