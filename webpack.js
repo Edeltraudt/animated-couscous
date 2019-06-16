@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const path = require('path');
 
@@ -42,11 +43,17 @@ module.exports = {
   },
 
   plugins: [
+    // Clear the dist folder
+    new CleanWebpackPlugin(['dist'], {}),
+
     new HtmlWebpackPlugin({
       template: './src/views/index.pug',
       inject: true,
       chunks: ['index'],
       filename: 'index.html'
-    })
+    }),
+
+    // Copy assets folder statically
+    new CopyWebpackPlugin([{ from: './src/img', to: 'img'}]),
   ]
 };

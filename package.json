@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "tetronk",
-  "version": "0.0.2",
+  "name": "match3",
+  "version": "0.1.0",
   "author": "Patricia Steves",
   "scripts": {
     "build": "webpack --config webpack.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edeltraudt/tetronk.git"
+    "url": "git+https://github.com/edeltraudt/match3.git"
   },
   "devDependencies": {
     "@babylonjs/core": "^4.0.3",
