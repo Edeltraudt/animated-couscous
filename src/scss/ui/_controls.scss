@@ -89,7 +89,7 @@ $offset-x: 40;
 
     @each $axis in x y z {
       .controls-#{$axis} & {
-        background-image: url('/assets/img/arrow-'+$axis+'.svg');
+        background-image: url('./assets/img/arrow-'+$axis+'.svg');
       }
     }
 
