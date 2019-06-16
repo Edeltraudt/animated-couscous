@@ -47,7 +47,7 @@ $offset-x: 40;
     justify-content: space-around;
     margin-right: -25px;
     right: 0;
-    transform: rotate(10.5deg);
+    transform: rotate(12.1deg);
     top: percentage($offset-top / $total-y);
 
     &.-inverse {
@@ -55,7 +55,7 @@ $offset-x: 40;
       margin-left: -25px;
       margin-right: 0;
       right: auto;
-      transform: rotate(-10.5deg) scaleX(-1);
+      transform: rotate(-12.1deg) scaleX(-1);
     }
   }
 

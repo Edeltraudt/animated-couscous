@@ -7,12 +7,12 @@ import { Engine, Scene, ArcRotateCamera, Animation, DirectionalLight, Vector3, P
 
 window.addEventListener('DOMContentLoaded', function () {
   const canvas = <HTMLCanvasElement> document.getElementById('view');
-  const engine = new Engine(canvas, true);
+  const engine = new Engine(canvas, true, { stencil: true });
   const controls = document.querySelector('.controls');
   let camera: ArcRotateCamera;
   let cube: Cube;
   let scene: Scene;
-  let cameraPosition: Vector3;
+  // let cameraPosition: Vector3;
 
   const createScene = function () {
     const scene = new Scene(engine);
@@ -20,8 +20,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
     camera = new ArcRotateCamera('camera', Math.PI / 4, Math.PI / 4, 10, Vector3.Zero(), scene);
     camera.setTarget(Vector3.Zero());
-    camera.attachControl(canvas, false);
-    cameraPosition = camera.position.clone();
+    // camera.attachControl(canvas, false);
+    // cameraPosition = camera.position.clone();
 
     // disable zoom
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
@@ -53,32 +53,32 @@ window.addEventListener('DOMContentLoaded', function () {
   /**
    * Animates the camera view back to the default position.
    */
-  const resetCamera = function(camera: ArcRotateCamera) {
-    const animation = new Animation('cameraPosition', 'position', 30,
-      Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CONSTANT);
-    const keyframes = [
-      { frame: 0, value: camera.position },
-      { frame: 20, value: cameraPosition }
-    ];
+  // const resetCamera = function(camera: ArcRotateCamera) {
+  //   const animation = new Animation('cameraPosition', 'position', 30,
+  //     Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CONSTANT);
+  //   const keyframes = [
+  //     { frame: 0, value: camera.position },
+  //     { frame: 20, value: cameraPosition }
+  //   ];
 
-    animation.setKeys(keyframes);
-    camera.animations.push(animation);
-    scene.beginAnimation(camera, 0, 20, false, 1, () => {
-      camera.rebuildAnglesAndRadius();
-    });
-  }
+  //   animation.setKeys(keyframes);
+  //   camera.animations.push(animation);
+  //   scene.beginAnimation(camera, 0, 20, false, 1, () => {
+  //     camera.rebuildAnglesAndRadius();
+  //   });
+  // }
 
-  document.addEventListener('pointerup', function () {
-    resetCamera(camera);
-    controls.classList.remove('-hidden');
-  });
+  // document.addEventListener('pointerup', function () {
+  //   resetCamera(camera);
+  //   controls.classList.remove('-hidden');
+  // });
 
-  document.addEventListener('pointerdown', (e: Event) => {
-    if (!(e.target instanceof Element &&
-          e.target.classList.contains('controls-button'))) {
-      controls.classList.add('-hidden');
-    }
-  });
+  // document.addEventListener('pointerdown', (e: Event) => {
+  //   if (!(e.target instanceof Element &&
+  //         e.target.classList.contains('controls-button'))) {
+  //     controls.classList.add('-hidden');
+  //   }
+  // });
 
   controls.querySelectorAll('.controls-button').forEach(button => {
     button.addEventListener('click', e => {
