@@ -1,4 +1,4 @@
-import { StandardMaterial, Scene, Vector3, TransformNode, Mesh, Animation, Color4 } from '@babylonjs/core';
+import { StandardMaterial, Scene, Vector3, TransformNode, Mesh, Animation, Color4, HighlightLayer, Color3 } from '@babylonjs/core';
 import { Block } from './Block';
 import { COLORS } from './Colors';
 import { random, shuffle } from '../helpers';
@@ -45,6 +45,12 @@ export class Cube {
           const block = this.model[x][y][z];
           let faces = [];
 
+          if (z === this.size - 1) {
+            faces.push({ index: 0, color: colors.pop() });
+          } else if (z === 0) {
+            faces.push({ index: 1, color: colors.pop() });
+          }
+
           if (x === this.size - 1) {
             faces.push({ index: 2, color: colors.pop() });
           } else if (x === 0) {
@@ -57,12 +63,6 @@ export class Cube {
             faces.push({ index: 5, color: colors.pop() });
           }
 
-          if (z === this.size - 1) {
-            faces.push({ index: 0, color: colors.pop() });
-          } else if (z === 0) {
-            faces.push({ index: 1, color: colors.pop() });
-          }
-
           block.setFaceColors(faces);
           block.render(new Vector3(
             x - this.centerOffset - this.gap + (this.gap * x),
@@ -72,6 +72,8 @@ export class Cube {
         }
       }
     }
+
+    this._checkMatches();
   }
 
   /**
@@ -123,9 +125,101 @@ export class Cube {
     this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
       // once the animation is finished, apply the transformations
       this._rotateInternal(boxArray, modelClone, axis, amount);
+      this._checkMatches(axis);
     });
   }
 
+  /**
+   * Checks the cube for 3-in-a-row
+   */
+  _checkMatches(rotatedAxis?: Vector3) {
+    console.log('Check Matches');
+    const highlight = new HighlightLayer('hl', this.scene);
+    // start in the middle [2][1][0] - [2][1][2] and spread
+
+    let previousColor: Color4;
+
+    let exposedSide = new Vector3(1, 0, 0);
+
+    // get all sides of the cube
+    for (let x = 0; x < this.model.length; x++) {
+      for (let y = 0; y < this.model[x].length; y++) {
+        let previousHorizontal: Color4;
+        let previousVertical: Color4;
+        // let isMatching = false;
+        let horizontalMatch = false;
+        let verticalMatch = false;
+
+        // check horizontal rows
+        for (let z = 0; z < this.model[x][y].length; z++) {
+          // limit to visible sides
+          let exposedSide = new Vector3();
+
+          // highlight.addMesh(this.model[x][y][z].box, Color3.Green());
+
+          if (x === this.size - 1) exposedSide.x = 1;
+          else if (y === this.size - 1) exposedSide.y = 1;
+          else if (z === this.size - 1) exposedSide.z = 1;
+
+          if (JSON.stringify(exposedSide) !== JSON.stringify(new Vector3())) {
+            console.log(this.model[x][y][z].key, exposedSide);
+            if (previousHorizontal) {
+              if (this.model[x][y][z].getColor(exposedSide) === previousHorizontal) {
+                horizontalMatch = true;
+              } else {
+                horizontalMatch = false;
+              }
+            }
+
+            previousHorizontal = this.model[x][y][z].getColor(exposedSide);
+            // if (previousHorizontal) {
+            //   if (this.model[x][y][z].getColor(exposedSide) === previousHorizontal) {
+            //     horizontalMatch = true;
+            //     // console.log(this.model[x][y][z].key);
+            //   } else {
+            //     horizontalMatch = false;
+            //   }
+            // }
+          }
+
+        }
+
+
+        if (horizontalMatch) {
+          const color = COLORS.find(c => c.color === previousHorizontal);
+          console.log('matching rows with', color.key);
+        }
+        console.log('\n');
+      }
+    }
+
+    // for (let i = 0; i < this.model[2][1].length; i++) {
+    //   // console.log(this.model[2][1][i]);
+    //   highlight.addMesh(this.model[2][1][i].box, Color3.Green());
+    //   let exposedSide = new Vector3(1, 0, 0);
+
+    //   if (previousColor) {
+    //     if (this.model[2][1][i].getColor(exposedSide) === previousColor) {
+    //       isMatching = true;
+    //       console.log('It\'s a match!')
+    //     } else {
+    //       isMatching = false;
+    //     }
+    //   } else {
+    //     previousColor = this.model[2][1][i].getColor(exposedSide);
+    //   }
+
+    //   // console.log(this.model[2][1][i].getColor(exposedSide));
+    // }
+
+    // if (isMatching) {
+    //   this._checkMatches();
+    // }
+  }
+
+  /**
+   * Generates an array of randomised colors for the entire cube.
+   */
   _colors(): Array<Color4> {
     const perSide = this.size * this.size;
     const colors = new Array<Color4>();
@@ -133,13 +227,16 @@ export class Cube {
 
     while(--sides) {
       for (let i = 0; i < perSide; i++) {
-        colors.push(COLORS[sides].color);
+        colors.push(COLORS[sides % 2 + 1].color);
       }
     }
 
     return shuffle(colors);
   }
 
+  /**
+   * Generates an array of randomised colors for one row.
+   */
   _rowColors(): Array<Color4> {
     const colors = new Array<Color4>();
 
