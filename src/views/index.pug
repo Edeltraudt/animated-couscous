@@ -11,8 +11,15 @@ html(lang=de)
 
     h1.logo Match3
 
-    //- .info
-    //-   p.info-text Drag to rotate.
+    .info
+      p.info-score
+        span.info-score-filler.js-score-filler 0000000
+        span.info-score-value.js-score 0
+      .info-buttons
+        button.info-control.difficulty(data-colors='3') Baby
+        button.info-control.difficulty.-active(data-colors='4') Easy
+        button.info-control.difficulty(data-colors='5') Medium
+        button.info-control.difficulty(data-colors='6') Hard
 
     .controls.-hidden
       .controls-x.controls-wrap
@@ -20,13 +27,13 @@ html(lang=de)
         button.controls-button(data-axis='z' data-target='2')
         button.controls-button(data-axis='z' data-target='3')
       .controls-y.controls-wrap
-        button.controls-button(data-axis='y' data-target='3')
-        button.controls-button(data-axis='y' data-target='2')
-        button.controls-button(data-axis='y' data-target='1')
-      .controls-y.-inverse.controls-wrap
         button.controls-button.-inverse(data-axis='y' data-target='3')
         button.controls-button.-inverse(data-axis='y' data-target='2')
         button.controls-button.-inverse(data-axis='y' data-target='1')
+      .controls-y.-inverse.controls-wrap
+        button.controls-button(data-axis='y' data-target='3')
+        button.controls-button(data-axis='y' data-target='2')
+        button.controls-button(data-axis='y' data-target='1')
       .controls-z.controls-wrap
         button.controls-button(data-axis='x' data-target='3')
         button.controls-button(data-axis='x' data-target='2')

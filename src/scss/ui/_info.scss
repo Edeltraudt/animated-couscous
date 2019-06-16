@@ -5,10 +5,47 @@
   left: 0;
   padding: 20px;
   position: absolute;
+  z-index: 11;
 
   p {
     &:last-child {
       margin: 0;
+    }
+  }
+
+  &-score {
+    font-size: $fs-large;
+
+    &-filler {
+      opacity: 0.2;
+    }
+  }
+
+  &-buttons {
+    display: flex;
+    margin: 0 0 0 -10px;
+  }
+
+  &-control {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    opacity: 0.5;
+    padding: 5px 10px;
+    margin: 0;
+
+
+    &.-active, &:hover, &:focus {
+      opacity: 1;
+    }
+
+    &:not(.-active) {
+      cursor: pointer;
+
+      &:hover, &:active {
+        color: $color-primary;
+      }
     }
   }
 }

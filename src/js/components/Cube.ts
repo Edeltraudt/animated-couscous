@@ -12,6 +12,10 @@ export class Cube {
   rotationCounter: number = 0;
   gap: number = 0.05;
   hl: HighlightLayer;
+  colorCount: number;
+  score: number = 0;
+  scoreElement = document.querySelector('.js-score');
+  scoreFillerElement = document.querySelector('.js-score-filler');
 
   constructor(size: number, scene: Scene) {
     this.size = size;
@@ -38,8 +42,9 @@ export class Cube {
   /**
    * Render and randomly paint all individual blocks inside the cube.
    */
-  render(): void {
-    const colors = this._colors();
+  render(colorCount: number = 4): void {
+    const colors = this._colors(colorCount);
+    this.colorCount = colorCount;
 
     for (let x = 0; x < this.size; x++) {
       for (let y = 0; y < this.size; y++) {
@@ -227,14 +232,21 @@ export class Cube {
           }
         }
 
-        if (match.col) this._replaceRow(matches.col, exposedSide);
-        if (match.row) this._replaceRow(matches.row, exposedSide);
-
-        // if (match.col || match.row) this._checkMatches();
+        if (match.col) {
+          this._replaceRow(matches.col, exposedSide);
+          this._score(300);
+        }
+        if (match.row) {
+          this._replaceRow(matches.row, exposedSide);
+          this._score(300);
+        }
       }
     }
   }
 
+  /**
+   * Replaces face colors on one
+   */
   _replaceRow(blocks: Array<Block>, side: Vector3) {
     const colors = this._rowColors();
     blocks.forEach(block => {
@@ -251,12 +263,12 @@ export class Cube {
   /**
    * Generates an array of randomised colors for the entire cube.
    */
-  _colors(): Array<Color4> {
+  _colors(colorCount: number = this.colorCount || COLORS.length): Array<Color4> {
     const colors = new Array<Color4>();
     let total = this.size * this.size * 6;
 
     while(total--) {
-      colors.push(COLORS[random(0, COLORS.length)].color);
+      colors.push(COLORS[random(0, colorCount)].color);
     }
 
     return colors;
@@ -265,14 +277,32 @@ export class Cube {
   /**
    * Generates an array of randomised colors for one row.
    */
-  _rowColors(): Array<Color4> {
+  _rowColors(colorCount: number = this.colorCount || COLORS.length): Array<Color4> {
     const colors = new Array<Color4>();
 
     for (let i = 0; i < this.size; i++) {
-      colors.push(COLORS[random(0, COLORS.length)].color);
+      colors.push(COLORS[random(0, colorCount)].color);
     }
 
     return colors;
+  }
+
+  /**
+   * Updates score and score display
+   */
+  _score(add: number) {
+    this.score += add;
+
+    const previousLength = this.scoreElement.textContent.length;
+    const scoreStr = this.score.toString();
+    const diff = previousLength - scoreStr.length;
+
+    if (diff < 0) {
+      this.scoreFillerElement.textContent =
+        this.scoreFillerElement.textContent.slice(0, diff);
+    }
+
+    this.scoreElement.textContent = scoreStr;
   }
 
   /**
