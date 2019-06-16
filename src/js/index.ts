@@ -3,7 +3,7 @@ import { Cube } from './components/Cube';
 
 import '../scss/styles.scss';
 
-import { Engine, Scene, ArcRotateCamera, Animation, DirectionalLight, Vector3, PointLight } from '@babylonjs/core';
+import { Engine, Scene, ArcRotateCamera, DirectionalLight, Vector3, PointLight } from '@babylonjs/core';
 
 window.addEventListener('DOMContentLoaded', function () {
   const canvas = <HTMLCanvasElement> document.getElementById('view');
