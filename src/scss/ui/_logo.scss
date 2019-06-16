@@ -12,8 +12,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-shadow:
-    $offset * 1 $offset * 1 rgba(cyan, 0.75),
-    $offset * 2 $offset * 2 rgba(magenta, 0.75);
+    $offset * 1 $offset * 1 rgba($color-primary, 0.85),
+    $offset * 2 $offset * 2 rgba($color-secondary, 0.85);
   position: absolute;
   z-index: 0;
 }
+
+// #79fffe –> rgbToColor(121, 255, 254)
+// #fea0fe –> rgbToColor(254, 160, 254)
+// #ff8b8b –> rgbToColor(255, 139, 139)
+// #f85125 –> rgbToColor(248, 81, 37)
+// #7122fa –> rgbToColor(113, 34, 250)
+// #e8e500 –> rgbToColor(232, 229, 0)
