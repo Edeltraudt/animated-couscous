@@ -1,6 +1,7 @@
 import { Color3, Color4, Vector3, StandardMaterial, Scene, MeshBuilder, Mesh } from "@babylonjs/core";
 
 import { COLORS } from "./Colors";
+import { rgbToColor } from "../helpers";
 
 export class Block {
   faceColors: Array<Color4>;
@@ -8,22 +9,33 @@ export class Block {
   scene: Scene;
   box: Mesh;
   key: string;
+  position: Vector3;
 
   constructor(key: string, scene: Scene) {
+    const defaultColor = rgbToColor(30, 39, 46);
+
     this.scene = scene;
     this.material = new StandardMaterial('boxMaterial', this.scene);
     this.material.specularColor = new Color3(0.2, 0.2, 0.2);
     this.key = key;
     this.faceColors = [
-      COLORS[0].color, COLORS[0].color, COLORS[0].color,
-      COLORS[0].color, COLORS[0].color, COLORS[0].color
+      defaultColor, defaultColor, defaultColor,
+      defaultColor, defaultColor, defaultColor
     ];
   }
 
-  setFaceColors(values: [{ index: number, color: Color4 }]) {
+  setFaceColors(values: [{ index: number, color: Color4 }]): void {
     values.forEach(value => {
       this.faceColors[value.index] = value.color;
     });
+  }
+
+  setFaceColor(index: number, color: Color4): void {
+    this.faceColors[index] = color;
+  }
+
+  setFaceColorFromVector(face: Vector3, color: Color4): void {
+    this.faceColors[this._getIndex(face)] = color;
   }
 
   rotateFaceColors(axis: Vector3, amount: number) {
@@ -68,19 +80,19 @@ export class Block {
     }
   }
 
-  set position(vector: Vector3) {
-    if (this.box !== null) {
-      this.box.position = vector;
-    }
-  }
+  // set position(vector: Vector3) {
+  //   if (this.box !== null) {
+  //     this.box.position = vector;
+  //   }
+  // }
 
-  get position(): Vector3 {
-    if (this.box !== null) {
-      return this.box.position;
-    } else {
-      return Vector3.Zero();
-    }
-  }
+  // get position(): Vector3 {
+  //   if (this.box !== null) {
+  //     return this.box.position;
+  //   } else {
+  //     return Vector3.Zero();
+  //   }
+  // }
 
   get rotation() {
     if (this.box !== null) {
@@ -91,29 +103,51 @@ export class Block {
   }
 
   getColor(face: Vector3) {
-    if (face.z > 0) {
-      return this.faceColors[0];
-    } else if (face.z < 0) {
-      return this.faceColors[1];
-    } else if (face.x > 0) {
-      return this.faceColors[2];
-    } else if (face.x < 0) {
-      return this.faceColors[3];
-    } else if (face.y > 0) {
-      return this.faceColors[4];
-    } else if (face.y < 0) {
-      return this.faceColors[5];
-    }
+    return this.faceColors[this._getIndex(face)];
   }
 
-  render(position: Vector3): Mesh {
+  getColors(face: Vector3) {
+    const colors = { x: null, y: null, z: null };
+
+    if (face.z > 0) {
+      colors.z = this.faceColors[0];
+    } else if (face.z < 0) {
+      colors.z = this.faceColors[1];
+    } else if (face.x > 0) {
+      colors.x = this.faceColors[2];
+    } else if (face.x < 0) {
+      colors.x = this.faceColors[3];
+    } else if (face.y > 0) {
+      colors.x = this.faceColors[4];
+    } else if (face.y < 0) {
+      colors.x = this.faceColors[5];
+    }
+
+    return colors;
+  }
+
+  render(position?: Vector3): Mesh {
+    if (position) this.position = position;
+    else this.position = this.box.position;
+    if (this.box) this.box.dispose();
+
     this.box = MeshBuilder.CreateBox(this.key, {
       size: 1,
       faceColors: this.faceColors
     }, this.scene);
     this.box.material = this.material;
-    this.position = position;
+    this.box.position = this.position;
+
 
     return this.box;
+  }
+
+  _getIndex(face: Vector3) {
+    if (face.z > 0) return 0;
+    else if (face.z < 0) return 1;
+    else if (face.x > 0) return 2;
+    else if (face.x < 0) return 3;
+    else if (face.y > 0) return 4;
+    else if (face.y < 0) return 5;
   }
 }
