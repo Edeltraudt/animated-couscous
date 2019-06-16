@@ -44,7 +44,7 @@ module.exports = {
 
   plugins: [
     // Clear the dist folder
-    new CleanWebpackPlugin(['dist'], {}),
+    new CleanWebpackPlugin(['dist/*'], {}),
 
     new HtmlWebpackPlugin({
       template: './src/views/index.pug',
@@ -54,6 +54,8 @@ module.exports = {
     }),
 
     // Copy assets folder statically
-    new CopyWebpackPlugin([{ from: './src/img', to: 'img'}]),
+    new CopyWebpackPlugin([
+      { from: './src/assets', to: 'assets'}
+    ]),
   ]
 };
