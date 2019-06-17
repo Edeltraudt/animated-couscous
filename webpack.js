@@ -12,7 +12,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
+
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
@@ -30,6 +31,14 @@ module.exports = {
           'css-loader',
           'sass-loader',
         ]
+      },
+      {
+        test: /\.(ico|jpg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+        exclude: /\/favicon.ico$/,
+        loader: 'file-loader',
+        query: {
+          name: '[path][name].[ext]'
+        }
       },
       {
         test: /\.pug$/,

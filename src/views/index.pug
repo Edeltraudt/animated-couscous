@@ -7,7 +7,15 @@ html(lang=de)
     title Match3
 
     style.
-      html { background: #03010f }
+      html { background: #03010f; font-family: 'BN CUWord'; }
+
+      @font-face {
+        font-family: 'BN CUWord';
+        src: url('assets/fonts/bncuworb-webfont.woff2') format('woff2'),
+              url('assets/fonts/bncuworb-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
 
       .loader {
         background: #03010f;
