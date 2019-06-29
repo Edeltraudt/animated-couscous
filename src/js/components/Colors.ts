@@ -1,5 +1,8 @@
 import { rgbToColor } from '../helpers';
 
+/**
+ * Available face colors with identifier.
+ */
 export const COLORS = [
   { key: 'purple', color: rgbToColor(113, 34, 250) },
   { key: 'cyan', color: rgbToColor(71, 242, 255) },

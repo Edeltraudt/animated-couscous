@@ -3,6 +3,11 @@ import { Block } from './Block';
 import { COLORS } from './Colors';
 import { random, rgbToColor3 } from '../helpers';
 
+/**
+ * The game object.
+ * Summarises an array of little cubes depending on the size (side)
+ * of the cube.
+ */
 export class Cube {
   size: number = 3;
   model: Array<any>;
@@ -27,7 +32,7 @@ export class Cube {
   }
 
   /**
-   * Build the internal cube reference.
+   * Build the internal cube reference 3D-array.
    */
   build(): void {
     this.model = this._createMatrix(this.size, (matrix, x, y) => {
@@ -41,6 +46,7 @@ export class Cube {
 
   /**
    * Render and randomly paint all individual blocks inside the cube.
+   * Will take an optional argument of the amount of colors to be generated.
    */
   render(colorCount: number = 4): void {
     const colors = this._colors(colorCount);
@@ -85,6 +91,9 @@ export class Cube {
 
   /**
    * Animate the rotation of an axis by the specified amount.
+   *
+   * @description Groups the single Blocks together in a transform node
+   * to handle the rotation in a collective in order to animate it.
    */
   rotateAxis(axis: Vector3, amount: number) {
     const root = new TransformNode('rotationAxis');
@@ -134,7 +143,11 @@ export class Cube {
   }
 
   /**
-   * Update the rotation for all blocks inside the rotated axis
+   * Update the rotation for all blocks inside the rotated axis.
+   * Calculates the updated vector positions of the cubes.
+   *
+   * @description Disbands the animation group before the permanent
+   * rotation is applied to the single cubes.
    */
   _rotateInternal(blocks: Array<Block>, modelClone: ([] | Block)[], axis, amount) {
     blocks.forEach(block => {
@@ -200,10 +213,10 @@ export class Cube {
         let previous = { col: null, row: null };
         let match = { col: true, row: true };
         let matches = { col: [], row: [] };
+        let replace: any[];
 
         // iterate over items
         for (let z = 0; z < this.size; z++) {
-
           // both column and row
           for (let rowOrColumn in match) {
             let order = {};
@@ -232,30 +245,32 @@ export class Cube {
           }
         }
 
-        if (match.col) {
-          this._replaceRow(matches.col, exposedSide);
-          this._score(300);
-        }
-        if (match.row) {
-          this._replaceRow(matches.row, exposedSide);
-          this._score(300);
-        }
+        if (match.col) replace = matches.col;
+        if (match.row) replace = matches.row;
+
+        this._replaceRow(replace, exposedSide);
+        this._score(300);
       }
     }
   }
 
   /**
-   * Replaces face colors on one
+   * Replaces face colors on one row of cubes.
+   *
+   * @description First highlights the affected meshes and then replaces
+   * the row with newly generated (random) face colors.
    */
   _replaceRow(blocks: Array<Block>, side: Vector3) {
     const colors = this._rowColors();
     blocks.forEach(block => {
       this.hl.addMesh(block.box, rgbToColor3(255, 255, 102));
+
+      // updates the colors only after a timeout to give the player
+      // enough time to see the highlight
       window.setTimeout(() => {
         this.hl.removeMesh(block.box);
         block.setFaceColorFromVector(side, colors.pop());
         block.render();
-        // this._checkMatches();
       }, 300)
     });
   }
@@ -288,7 +303,12 @@ export class Cube {
   }
 
   /**
-   * Updates score and score display
+   * Updates score and score display.
+   *
+   * @description For style points, the score counter has a secondary
+   * display that visually pads the number with leading zeros in half opacity.
+   * This function handles the amount of zeros depending on the score to leave
+   * the alignment of numbers intact.
    */
   _score(add: number) {
     this.score += add;

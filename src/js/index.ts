@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function () {
   let scene: Scene;
   let colorCount = 4;
 
-  const createScene = function (callback?: () => void) {
+  const createScene = function() {
     const scene = new Scene(engine);
     scene.clearColor = rgbToColor(15, 15, 15, 0);
 
@@ -34,6 +34,7 @@ window.addEventListener('DOMContentLoaded', function () {
     cube = new Cube(3, scene);
     cube.render(colorCount);
 
+    // initialise control buttons
     controls.classList.remove('-hidden');
     difficultySettings.forEach(button => {
       button.addEventListener('click', e => {
@@ -49,12 +50,11 @@ window.addEventListener('DOMContentLoaded', function () {
     return scene;
   }
 
-  scene = createScene(() => {
-  });
-
+  scene = createScene();
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
 
+  // attach event listeners to all rotation control buttons
   controls.querySelectorAll('.controls-button').forEach(button => {
     button.addEventListener('click', e => {
       const axis = button.getAttribute('data-axis');
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', function () {
       const axisVector = new Vector3();
       let amount = Math.PI / 2;
 
-      // rotation the other way around feels better for x
+      // rotation the other way around feels better for z
       if (axis === 'z') amount *= -1;
 
       if (button.classList.contains('-inverse')) amount *= -1;
