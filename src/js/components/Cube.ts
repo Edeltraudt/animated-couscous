@@ -213,7 +213,6 @@ export class Cube {
         let previous = { col: null, row: null };
         let match = { col: true, row: true };
         let matches = { col: [], row: [] };
-        let replace: any[];
 
         // iterate over items
         for (let z = 0; z < this.size; z++) {
@@ -235,7 +234,8 @@ export class Cube {
             matches[rowOrColumn].push(block);
 
             if (previous[rowOrColumn] !== null) {
-              if (previous[rowOrColumn].getColor(exposedSide) !== block.getColor(exposedSide)) {
+              if (previous[rowOrColumn].getFaceColor(exposedSide) !==
+                  block.getFaceColor(exposedSide)) {
                 match[rowOrColumn] = false;
                 matches[rowOrColumn] = [];
               }
@@ -245,11 +245,14 @@ export class Cube {
           }
         }
 
-        if (match.col) replace = matches.col;
-        if (match.row) replace = matches.row;
-
-        this._replaceRow(replace, exposedSide);
-        this._score(300);
+        if (match.col) {
+          this._replaceRow(matches.col, exposedSide);
+          this._score(300);
+        }
+        if (match.row) {
+          this._replaceRow(matches.row, exposedSide);
+          this._score(300);
+        }
       }
     }
   }
