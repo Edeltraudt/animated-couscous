@@ -7,12 +7,19 @@ import { rgbToColor } from "../helpers";
  * inside the Rubik's cube.
  */
 export class Block {
-  faceColors: Array<Color4>;
   material: StandardMaterial;
   scene: Scene;
   box: Mesh;
   key: string;
   position: Vector3;
+
+  /**
+   * Array of face colors.
+   *   0 = +z | 1 = -z
+   *   2 = +x | 3 = -x
+   *   4 = +y | 5 = -y
+   */
+  faceColors: Array<Color4>;
 
   constructor(key: string, scene: Scene) {
     const defaultColor = rgbToColor(30, 39, 46);

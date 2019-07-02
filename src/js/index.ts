@@ -57,20 +57,24 @@ window.addEventListener('DOMContentLoaded', function () {
   // attach event listeners to all rotation control buttons
   controls.querySelectorAll('.controls-button').forEach(button => {
     button.addEventListener('click', e => {
-      const axis = button.getAttribute('data-axis');
-      const target = button.getAttribute('data-target');
-      const axisVector = new Vector3();
-      let amount = Math.PI / 2;
+      // only allow rotation trigger if the cube finished
+      // executing the animation of the previous command
+      if (!cube.isBlocked) {
+        const axis = button.getAttribute('data-axis');
+        const target = button.getAttribute('data-target');
+        const axisVector = new Vector3();
+        let amount = Math.PI / 2;
 
-      // rotation the other way around feels better for z
-      if (axis === 'z') amount *= -1;
+        // rotation the other way around feels better for z
+        if (axis === 'z') amount *= -1;
 
-      if (button.classList.contains('-inverse')) amount *= -1;
+        if (button.classList.contains('-inverse')) amount *= -1;
 
-      axisVector[axis] = Number.parseInt(target);
+        axisVector[axis] = Number.parseInt(target);
 
-      e.preventDefault();
-      cube.rotateAxis(axisVector, amount);
+        e.preventDefault();
+        cube.rotateAxis(axisVector, amount);
+      }
     });
   });
 });

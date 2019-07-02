@@ -10,17 +10,34 @@ import { random, rgbToColor3 } from '../helpers';
  */
 export class Cube {
   size: number = 3;
-  model: Array<any>;
-  material: StandardMaterial;
-  scene: Scene;
-  centerOffset: number = 0;
-  rotationCounter: number = 0;
   gap: number = 0.05;
-  hl: HighlightLayer;
   colorCount: number;
+  centerOffset: number = 0;
+
   score: number = 0;
   scoreElement = document.querySelector('.js-score');
   scoreFillerElement = document.querySelector('.js-score-filler');
+
+  material: StandardMaterial;
+  scene: Scene;
+
+  /**
+   * Array representation of the size x size x size cube.
+   * Holds all single Blocks inside the Cube.
+   */
+  model: Array<any>;
+
+  /**
+   * HighlightLayer for highlighting matching cubes.
+   */
+  hl: HighlightLayer;
+
+  /**
+   * Determines if the player can rotate.
+   * Serves as a blocker in order to let the animation group rotate first
+   * before queuing the next animation.
+   */
+  isBlocked = false;
 
   constructor(size: number, scene: Scene) {
     this.size = size;
@@ -135,9 +152,11 @@ export class Cube {
     animation.setKeys(keyframes);
 
 
+    this.isBlocked = true;
     this.scene.beginDirectAnimation(root, [animation], 0, framerate, false, undefined, () => {
       // once the animation is finished, apply the transformations
       this._rotateInternal(blockArray, modelClone, axis, amount);
+      this.isBlocked = false;
       this._checkMatches();
     });
   }
